@@ -30,8 +30,8 @@ void setup() {
 void loop() {
   get_last_command();
   if (play_now) {
-    play_with_cat();
     digitalWrite(laser, HIGH);
+    play_with_cat();
   } else {
     digitalWrite(laser, LOW);
   }
