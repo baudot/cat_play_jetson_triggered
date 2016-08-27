@@ -8,6 +8,10 @@ int start_tilt_position = 80;
 int start_pan_position = 80;
 int end_tilt_position = 80;
 int end_pan_position = 80;
+int min_pan = 60;
+int max_pan = 120;
+int min_tilt = 60;
+int max_tilt = 120;
 int laser = 2;
 
 #define wig 5
@@ -91,15 +95,15 @@ void ptu_test() {
 void play_with_cat() {
   delay(random(500,3000));
   // Go to a new position, sometimes quickly, usually slowly.
-  if (random(0,3)) slow_move();
+  if (random(0,4)) slow_move();
   else quick_move();
   // Sometimes wiggle there.
   if (random(0,2)) wiggle();
 }
 
 void slow_move() {
-  int end_pan_position = random(60,120);
-  int end_tilt_position = random(60,120);
+  int end_pan_position = random(min_pan,max_pan);
+  int end_tilt_position = random(min_tilt,max_tilt);
   int steps = random(20,40);
   for (int i=0; i<steps; i++) {
     pan.write(map(i, 0, steps, pan_position, end_pan_position));
@@ -113,9 +117,14 @@ void slow_move() {
 void quick_move() {
   pan_position = random(60, 120);
   tilt_position = random(60, 120);
-  pan.write(pan_position);
-  tilt.write(random(tilt_position));
-}
+  int steps = random(10,15);
+  for (int i=0; i<steps; i++) {
+    pan.write(map(i, 0, steps, pan_position, end_pan_position));
+    tilt.write(map(i, 0, steps, tilt_position, end_tilt_position));
+    delay(40);
+  }
+  pan_position = end_pan_position;
+  tilt_position = end_tilt_position;}
 
 void wiggle() {
   int randomom_wiggle = random(0,4);
